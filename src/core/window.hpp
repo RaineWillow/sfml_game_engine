@@ -2,7 +2,10 @@
 #define Window_hpp
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
+#include "../scene/scene.hpp"
+#include "../scene/game.hpp"
 #include <string>
+#include <map>
 
 class Window {
 public:
@@ -15,6 +18,7 @@ public:
 private:
 	sf::RenderWindow * _window;
 	bool _isRunning;
+	std::map<int, Scene *> _scenes;
 };
 
 #endif

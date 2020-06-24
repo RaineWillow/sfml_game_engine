@@ -3,6 +3,7 @@ Window::Window(int w, int h, std::string title) {
 	_window = new sf::RenderWindow(sf::VideoMode(w, h), title);
 	_window->setVerticalSyncEnabled(true);
 	_window->setFramerateLimit(60);
+	
 }
 
 Window::~Window() {
