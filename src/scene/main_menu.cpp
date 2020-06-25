@@ -1,14 +1,14 @@
-#include "game.hpp"
+#include "main_menu.hpp"
 
-Game::Game(){//sf::RenderWindow * window) {
-	//_window = window;
+MainMenu::MainMenu() {
+	//this->_window = window;
 }
 
-Game::~Game() {
-	//pass
+MainMenu::~MainMenu() {
+	std::cout << "destroyed\n";
 }
 
-void Game::update(sf::RenderWindow & _window) {
+void MainMenu::update(sf::RenderWindow & _window) {
 	sf::Event event;
 	_window.pollEvent(event);
 	switch (event.type) {
@@ -17,15 +17,15 @@ void Game::update(sf::RenderWindow & _window) {
 			this->_isActive = false;
 			break;
 		case sf::Event::KeyPressed:
-			if (event.key.code == sf::Keyboard::Q) {
+			if (event.key.code == sf::Keyboard::E) {
 				this->_isActive = false;
-				this->_myDat.id = 3;
+				this->_myDat.id = 2;
 			}
 			break;
 	}
 }
 
-void Game::render(sf::RenderWindow & _window) {
+void MainMenu::render(sf::RenderWindow & _window) {
 	_window.clear(sf::Color::Black);
 	//rendering happens here
 	_window.display();

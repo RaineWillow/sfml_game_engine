@@ -4,8 +4,12 @@
 #include "SFML/Graphics.hpp"
 #include "../scene/scene.hpp"
 #include "../scene/game.hpp"
+#include "../scene/main_menu.hpp"
 #include <string>
+#include <iostream>
 #include <map>
+#include <iterator>
+#include <algorithm>
 
 class Window {
 public:
@@ -17,7 +21,8 @@ public:
 	bool running();
 private:
 	sf::RenderWindow * _window;
-	bool _isRunning;
+	bool _isRunning = true;
+	bool _doingScenes;
 	std::map<int, Scene *> _scenes;
 };
 
