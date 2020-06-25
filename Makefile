@@ -1,6 +1,6 @@
 CXX=g++
 CFLAGS=
-LIBS=-lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
+LIBS=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
 
 SOURCES=src/main.cpp
 CORE=src/core/window.cpp

@@ -8,18 +8,12 @@ Game::~Game() {
 	//pass
 }
 
-void Game::update(sf::RenderWindow & _window) {
-	sf::Event event;
-	_window.pollEvent(event);
+void Game::update(sf::RenderWindow & _window, sf::Event & event) {
 	switch (event.type) {
-		case sf::Event::Closed:
-			_window.close();
-			this->_isActive = false;
-			break;
 		case sf::Event::KeyPressed:
 			if (event.key.code == sf::Keyboard::Q) {
 				this->_isActive = false;
-				this->_myDat.id = 3;
+				this->_myDat.id = 1;
 			}
 			break;
 	}
@@ -28,5 +22,4 @@ void Game::update(sf::RenderWindow & _window) {
 void Game::render(sf::RenderWindow & _window) {
 	_window.clear(sf::Color::Black);
 	//rendering happens here
-	_window.display();
 }

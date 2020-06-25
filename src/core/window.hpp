@@ -15,10 +15,10 @@ class Window {
 public:
 	Window(int w, int h, std::string title);
 	~Window();
-	void update();
-	void render();
+	//void update();
+	//void render();
 	void run();
-	bool running();
+	//bool running();
 private:
 	sf::RenderWindow * _window;
 	bool _isRunning = true;

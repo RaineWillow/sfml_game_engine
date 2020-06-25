@@ -18,20 +18,11 @@ Window::~Window() {
 	delete _window;
 }
 
-void Window::update() {
-	sf::Event event;
-	_window->pollEvent(event);
-	switch (event.type) {
-		case sf::Event::Closed:
-			_window->close();
-			_isRunning = false;
-			break;
-	}
-
+void Window::run() {
 	int currScene = 1;
 	while (_doingScenes) {
 		SceneData nextScene = _scenes[currScene]->run(*_window);
-		if (nextScene.id == 0) {
+		if (nextScene.id == -1) {
 			_window->close();
 			_isRunning = false;
 			_doingScenes = false;
@@ -40,25 +31,9 @@ void Window::update() {
 				std::cout << "Tried to access non-existent scene. " << nextScene.id << "\n";
 				_doingScenes = false;
 			} else {
+				std::cout << "Changing to scene: " << nextScene.id << "\n";
 				currScene = nextScene.id;
 			}
 		}
 	}
-}
-
-void Window::render() {
-	_window->clear(sf::Color::Black);
-	//rendering happens here
-	_window->display();
-}
-
-void Window::run() {
-	while (_window->isOpen()) {
-		update();
-		render();
-	}
-}
-
-bool Window::running() {
-	return _isRunning;
 }
