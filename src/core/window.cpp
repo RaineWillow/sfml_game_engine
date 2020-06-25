@@ -4,14 +4,19 @@ Window::Window(int w, int h, std::string title) {
 	_window->setVerticalSyncEnabled(true);
 	_window->setFramerateLimit(60);
 
+	_resManager = new ResourceManager("res/");
+
+
 	Scene * game = new Game();
-	Scene * menu = new MainMenu();
+	Scene * menu = new MainMenu(_resManager);
 	_scenes.insert(std::make_pair(1, menu));
 	_scenes.insert(std::make_pair(2, game));
+	
 	_doingScenes = true;
 }
 
 Window::~Window() {
+	delete _resManager;
 	for (auto const& x : _scenes) {
 		delete x.second;
 	}

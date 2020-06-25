@@ -1,11 +1,12 @@
 #ifndef Widget_hpp
 #define Widget_hpp
+#include "SFML/Window.hpp"
+#include "SFML/Graphics.hpp"
 #include <iostream>
 #include <string>
 #include <map>
 #include <iterator>
 #include <algorithm>
-#include "SDL2/SDL.h"
 #include "../utils/functor.hpp"
 #include "widget_base.hpp"
 
@@ -21,7 +22,7 @@ public:
 	}
 
 	virtual void update()=0;
-	virtual void render()=0;
+	virtual void render(sf::RenderWindow * _window)=0;
 
 	void registerEvent(std::string qKey, ClassType& object, FunctionType method) {
 		if (_eventList.find(qKey) == _eventList.end()) {
@@ -40,6 +41,10 @@ public:
 			_eventList[qKey]->invoke(this);
 		}
 	}
+
+
+
+	
 
 private:
 	std::map<std::string,Functor<ClassType, Result, Widget>*> _eventList;

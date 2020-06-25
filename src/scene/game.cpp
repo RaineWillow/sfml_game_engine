@@ -19,7 +19,7 @@ void Game::update(sf::RenderWindow & _window, sf::Event & event) {
 	}
 }
 
-void Game::render(sf::RenderWindow & _window) {
-	_window.clear(sf::Color::Black);
+void Game::render(sf::RenderWindow * _window) {
+	_window->clear(sf::Color::Black);
 	//rendering happens here
 }

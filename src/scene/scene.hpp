@@ -14,7 +14,7 @@ class Scene {
 public:
 
 	virtual void update(sf::RenderWindow & _window, sf::Event & event)=0;
-	virtual void render(sf::RenderWindow & _window)=0;
+	virtual void render(sf::RenderWindow * _window)=0;
 
 	SceneData run(sf::RenderWindow & _window) {
 		_isActive = true;
@@ -29,7 +29,7 @@ public:
 					break;
 			}
 			this->update(_window, event);
-			this->render(_window);
+			this->render(&_window);
 			_window.display();
 		}
 	return _myDat;

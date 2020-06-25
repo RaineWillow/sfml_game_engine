@@ -5,6 +5,7 @@
 #include "../scene/scene.hpp"
 #include "../scene/game.hpp"
 #include "../scene/main_menu.hpp"
+#include "resource_manager.hpp"
 #include <string>
 #include <iostream>
 #include <map>
@@ -15,12 +16,10 @@ class Window {
 public:
 	Window(int w, int h, std::string title);
 	~Window();
-	//void update();
-	//void render();
 	void run();
-	//bool running();
 private:
 	sf::RenderWindow * _window;
+	ResourceManager * _resManager;
 	bool _isRunning = true;
 	bool _doingScenes;
 	std::map<int, Scene *> _scenes;
