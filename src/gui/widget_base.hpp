@@ -4,14 +4,18 @@
 #include "SFML/Graphics.hpp"
 
 struct WidgetData {
-	int active;
+	int mx;
+	int my;
+	bool mMoved = false;
+
+	int active = -1;
 	bool clicked;
 };
 
 class WidgetBase {
 public:
-	virtual void update()=0;
-	virtual void render(sf::RenderWindow * _window)=0;
+	virtual void update(WidgetData * data)=0;
+	virtual void render(sf::RenderTexture * renderOut)=0;
 };
 
 #endif

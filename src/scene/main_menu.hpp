@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "../core/resource_manager.hpp"
 #include "../utils/controller.hpp"
+#include "../gui/gui_manager.hpp"
 #include "../gui/widget_base.hpp"
 #include "../gui/widget.hpp"
 #include "../gui/g_button.hpp"
@@ -23,8 +24,8 @@ public:
 	void onBClick(Widget<MainMenu, void> * instance);
 private:
 	ResourceManager * _resManager;
+	GuiManager * _guiManager;
 	Controller * _controller;
-	std::vector<WidgetBase*> _widgets;
 	WidgetData * _data;
 };
 

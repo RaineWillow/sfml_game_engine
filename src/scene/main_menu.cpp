@@ -6,36 +6,44 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 	_data->active = -1;
 	_data->clicked = false;
 
-	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(_data, 0, _resManager->getSprite(3), 0, 0, 0.4, 0.4,
-		*this,
-		&MainMenu::onBActive,
-		&MainMenu::onBInactive,
-		&MainMenu::onBClick
-	);
-	_widgets.push_back(startButton);
+	_guiManager = new GuiManager(800, 600);
 
-	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(_data, 1, _resManager->getSprite(3), 0, 100, 0.4, 0.4,
-	 	*this,
-		&MainMenu::onBActive,
-		&MainMenu::onBInactive,
-		&MainMenu::onBClick
-	);
-	_widgets.push_back(exitButton);
+	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 0, 100, 40);
+
+	startButton->registerEvent("onActive", *this, &MainMenu::onBActive);
+	startButton->registerEvent("onInactive", *this, &MainMenu::onBInactive);
+	startButton->registerEvent("onClick", *this, &MainMenu::onBClick);
+
+	startButton->useSprite(_resManager->getSprite(3));
+	startButton->addTitle("Start", _resManager->getFont(1), sf::Color::Red);
+
+	_guiManager->registerWidget(startButton);
+
+	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 100, 100, 40);
+
+	exitButton->registerEvent("onActive", *this, &MainMenu::onBActive);
+	exitButton->registerEvent("onInactive", *this, &MainMenu::onBInactive);
+	exitButton->registerEvent("onClick", *this, &MainMenu::onBClick);
+
+	exitButton->useSprite(_resManager->getSprite(3));
+	exitButton->addTitle("Exit", _resManager->getFont(1), sf::Color::Red);
+
+	_guiManager->registerWidget(exitButton);
 
 	_controller = new Controller;
 	_controller->keyAdd(sf::Keyboard::Up);
 	_controller->keyAdd(sf::Keyboard::Down);
 	_controller->keyAdd(sf::Keyboard::Z);
 
+	_controller->mbAdd(sf::Mouse::Left);
+
 
 }
 
 MainMenu::~MainMenu() {
 	delete _data;
+	delete _guiManager;
 	delete _controller;
-	for (int i = 0; i < (int)_widgets.size(); i++) {
-		delete _widgets[i];
-	}
 }
 
 void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
@@ -46,53 +54,49 @@ void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
 		case sf::Event::KeyReleased:
 			_controller->keyUp(event.key.code);
 			break;
+		case sf::Event::MouseButtonPressed:
+			_controller->mbDown(event.mouseButton.button);
+			break;
+		case sf::Event::MouseButtonReleased:
+			_controller->mbUp(event.mouseButton.button);
+			break;
+		case sf::Event::MouseMoved:
+			_controller->mouseMotion(event.mouseMove.x, event.mouseMove.y);
+			break;
 	}
 
-	if (_controller->getKeyClicked(sf::Keyboard::Down)) {
-		if (_data->active < (int)_widgets.size()-1) {
-			_data->active++;
-		}
-	}
+	_data->mx = _controller->getMx();
+	_data->my = _controller->getMy();
 
-	if (_controller->getKeyClicked(sf::Keyboard::Up)) {
-		if (_data->active > 0) {
-			_data->active--;
-		}
-	}
+	_data->clicked = _controller->getKeyClicked(sf::Keyboard::Z) || _controller->getMbClicked(sf::Mouse::Left);
+	_data->mMoved = _controller->mMoved();
 
-	_data->clicked = _controller->getKeyClicked(sf::Keyboard::Z);
+	_guiManager->update(_data);
 
-	for (int i = 0; i < (int)_widgets.size(); i++) {
-		_widgets[i]->update();
+	if (_window.pollEvent(event)) {
+		this->update(_window, event);
 	}
 }
 
 void MainMenu::render(sf::RenderWindow * _window) {
 	_window->clear(sf::Color::Black);
 	//rendering happens here
-	for (int i = 0; i < (int)_widgets.size(); i++) {
-		_widgets[i]->render(_window);
-	}
+	_window->draw(_guiManager->getRenderable());
 }
 
 void MainMenu::onBActive(Widget<MainMenu, void> * instance) {
 	GButton<MainMenu, void> * castContext = dynamic_cast<GButton<MainMenu, void>*>(instance);
-	//castContext->widgetSprite.scale(1.2, 1.2);
 	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 255));
-	std::cout << "called";
 }
 
 void MainMenu::onBInactive(Widget<MainMenu, void> * instance) {
 	GButton<MainMenu, void> * castContext = dynamic_cast<GButton<MainMenu, void>*>(instance);
-	//castContext->widgetSprite.setScale(castContext->ww, castContext->wh);
-	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 128));
-	std::cout << "called";
+	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 200));
 }
 
 void MainMenu::onBClick(Widget<MainMenu, void> * instance) {
 	GButton<MainMenu, void> * castContext = dynamic_cast<GButton<MainMenu, void>*>(instance);
-	//castContext->widgetSprite.setScale(castContext->ww, castContext->wh);
-	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 128));
+	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 200));
 	int id = castContext->getId();
 	if (id == 0) {
 		this->_isActive = false;

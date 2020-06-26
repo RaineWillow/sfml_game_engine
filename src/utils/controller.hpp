@@ -20,24 +20,25 @@ public:
 	bool getKeyClicked(sf::Keyboard::Key qKey);
 
 	//mouse functions----------------------------------------------------------
-	/*
-	void mbAdd(Uint8 mb);
-	void mbDown(Uint8 mb, Sint32 mx, Sint32 my);
-	void mbUp(Uint8 mb, Sint32 mx, Sint32 my);
-	bool getMb(Uint8 mb);
-	bool getMbClicked(Uint8 mb);
 
-	void mouseMotion(Sint32 mx, Sint32 my);
+	void mbAdd(sf::Mouse::Button mb);
+	void mbDown(sf::Mouse::Button mb);
+	void mbUp(sf::Mouse::Button mb);
+	bool getMb(sf::Mouse::Button mb);
+	bool getMbClicked(sf::Mouse::Button mb);
 
-	Sint32 getMx();
-	Sint32 getMy();
-	*/
+	void mouseMotion(int mx, int my);
+	bool mMoved();
+
+	int getMx();
+	int getMy();
 private:
 	std::map<sf::Keyboard::Key,ButtonData> _keyList;
-	//std::map<Uint8,ButtonData> _mbList;
+	std::map<sf::Mouse::Button,ButtonData> _mbList;
 
-	//Sint32 _mx;
-	//Sint32 _my;
+	int _mx;
+	int _my;
+	bool _mMoved = false;
 
 };
 

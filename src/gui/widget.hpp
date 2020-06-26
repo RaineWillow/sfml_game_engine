@@ -21,8 +21,8 @@ public:
 		}
 	}
 
-	virtual void update()=0;
-	virtual void render(sf::RenderWindow * _window)=0;
+	virtual void update(WidgetData * data)=0;
+	virtual void render(sf::RenderTexture * renderOut)=0;
 
 	void registerEvent(std::string qKey, ClassType& object, FunctionType method) {
 		if (_eventList.find(qKey) == _eventList.end()) {
@@ -41,10 +41,6 @@ public:
 			_eventList[qKey]->invoke(this);
 		}
 	}
-
-
-
-	
 
 private:
 	std::map<std::string,Functor<ClassType, Result, Widget>*> _eventList;

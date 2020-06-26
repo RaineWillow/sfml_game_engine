@@ -51,9 +51,8 @@ bool Controller::getKeyClicked(sf::Keyboard::Key qKey) {
 	return false;
 }
 
-/*
-void Controller::mbAdd(Uint8 mb) {
-	std::cout << "added\n";
+
+void Controller::mbAdd(sf::Mouse::Button mb) {
 	if (_mbList.find(mb) == _mbList.end()) {
 		ButtonData data = {false, false};
 		_mbList.insert({ mb, data });
@@ -62,9 +61,7 @@ void Controller::mbAdd(Uint8 mb) {
 	}
 }
 
-void Controller::mbDown(Uint8 mb, Sint32 mx, Sint32 my) {
-	_mx = mx;
-	_my = my;
+void Controller::mbDown(sf::Mouse::Button mb) {
 	if (_mbList.find(mb) == _mbList.end()) {
 		std::cout << "mouse button is not in list of watched buttons, add the button 1.\n";
 	} else {
@@ -72,18 +69,19 @@ void Controller::mbDown(Uint8 mb, Sint32 mx, Sint32 my) {
 	}
 }
 
-void Controller::mbUp(Uint8 mb, Sint32 mx, Sint32 my) {
-	_mx = mx;
-	_my = my;
+void Controller::mbUp(sf::Mouse::Button mb) {
 	if (_mbList.find(mb) == _mbList.end()) {
 		std::cout << "mouse button is not in list of watched buttons, add the button 2.\n";
 	} else {
+		if (_mbList[mb].down == true) {
+			_mbList[mb].clicked = true;
+		}
 		_mbList[mb].down = false;
-		_mbList[mb].clicked = true;
+
 	}
 }
 
-bool Controller::getMb(Uint8 mb) {
+bool Controller::getMb(sf::Mouse::Button mb) {
 	if (_mbList.find(mb) == _mbList.end()) {
 		std::cout << "mouse button is not in list of watched buttons, add the button 3.\n";
 	} else {
@@ -92,7 +90,7 @@ bool Controller::getMb(Uint8 mb) {
 	return false;
 }
 
-bool Controller::getMbClicked(Uint8 mb) {
+bool Controller::getMbClicked(sf::Mouse::Button mb) {
 	if (_mbList.find(mb) == _mbList.end()) {
 		std::cout << "mouse button is not in list of watched buttons, add the button 4.\n";
 	} else {
@@ -106,16 +104,27 @@ bool Controller::getMbClicked(Uint8 mb) {
 	return false;
 }
 
-void Controller::mouseMotion(Sint32 mx, Sint32 my){
+void Controller::mouseMotion(int mx, int my){
+	if ((mx != _mx) || my != _my) {
+		_mMoved = true;
+	}
 	_mx = mx;
 	_my = my;
 }
 
-Sint32 Controller::getMx() {
+bool Controller::mMoved() {
+	if (_mMoved) {
+		_mMoved = false;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+int Controller::getMx() {
 	return _mx;
 }
 
-Sint32 Controller::getMy() {
+int Controller::getMy() {
 	return _my;
 }
-*/

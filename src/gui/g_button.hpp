@@ -4,56 +4,95 @@
 #include "SFML/Graphics.hpp"
 #include "widget_base.hpp"
 #include "widget.hpp"
+#include <string>
 
 template <typename ClassType, typename Result>
 class GButton : public Widget<ClassType, Result>
 {
 	typedef Result (ClassType::*FunctionType)(Widget<ClassType,Result>*);
 public:
-	GButton(WidgetData * data, int id, sf::Sprite mySprite, int x, int y, double w, double h,
-		ClassType& object,
-		FunctionType onActive,
-		FunctionType onInactive,
-		FunctionType onClick)
+	GButton(int id, int x, int y, double w, double h)
 	{
-		_data = data;
 		_id = id;
 		_lastId = -1;
-		widgetSprite = mySprite;
-		this->widgetSprite.setPosition(x, y);
-		this->widgetSprite.setScale(w, h);
-		this->widgetSprite.setColor(sf::Color(255, 255, 255, 128));
-		ww = w;
-		wh = h;
-
-		this->registerEvent("onActive", object, onActive);
-		this->registerEvent("onInactive", object, onInactive);
-		this->registerEvent("onClick", object, onClick);
+		_x = x;
+		_y = y;
+		_w = w;
+		_h = h;
 	}
 
-	void update()
+	void useSprite(sf::Sprite setSprite) {
+		widgetSprite = setSprite;
+		this->widgetSprite.setPosition(_x, _y);
+		this->widgetSprite.setScale(_w / this->widgetSprite.getTextureRect().width, _h / this->widgetSprite.getTextureRect().height);
+		this->widgetSprite.setColor(sf::Color(255, 255, 255, 200));
+		_useSprite = true;
+	}
+
+	void update(WidgetData * data)
 	{
-		if ((_data->active == _id)) {
-			if (_data->clicked == true) {
+		if (((((data->mx >= _x) && (data->mx <= _x+_w)) && ((data->my >= _y) && (data->my <= _y+_h))))) {
+			data->active = _id;
+
+			if (data->clicked) {
 				this->callEvent("onClick");
 			}
 
-			if (_lastId != _data->active) {
-				std::cout << "pop " << _lastId << " " << _data->active << "\n";
+			if ((!_wasActive) && (data->mMoved)) {
+				std::cout << "working!\n";
 				_wasActive = true;
 				this->callEvent("onActive");
 			}
+
 		} else {
-			if (_wasActive) {
+			if ((_wasActive) && ((data->mMoved))) {
 				this->callEvent("onInactive");
 				_wasActive = false;
 			}
 		}
-		_lastId = _data->active;
+/*
+		if ((data->active == _id)) {
+
+			if (data->clicked == true) {
+				this->callEvent("onClick");
+			}
+
+			if (_lastId != data->active) {
+				_wasActive = true;
+				this->callEvent("onActive");
+			}
+		} else {
+			if (_lastId != data->active) {
+				if (_wasActive) {
+					this->callEvent("onInactive");
+					_wasActive = false;
+				}
+			}
+		}
+
+		_lastId = data->active;
+*/
 	}
 
-	void render(sf::RenderWindow * _window) {
-		_window->draw(widgetSprite);
+	void render(sf::RenderTexture * renderOut) {
+		if (_useSprite) {
+			renderOut->draw(widgetSprite);
+		}
+
+		if (_drawText) {
+			title.setOrigin(title.getLocalBounds().width/2, title.getLocalBounds().height/2);
+			title.setPosition(_x+_w/2, _y+_h/2);
+			renderOut->draw(title);
+		}
+
+	}
+
+	void addTitle(std::string myTitle, sf::Font * font, sf::Color color) {
+		_drawText = true;
+		title.setFont(*font);
+		title.setString(myTitle);
+		title.setCharacterSize(_h/2);
+		title.setFillColor(color);
 	}
 
 	int getId() {
@@ -61,14 +100,23 @@ public:
 	}
 
 	sf::Sprite widgetSprite;
-	bool ww;
-	bool wh;
+	sf::Text title;
 
 private:
-	WidgetData * _data;
 	int _id;
 	int _lastId;
+	int _lastHover;
 	bool _wasActive = false;
+
+	int _x;
+	int _y;
+	double _w;
+	double _h;
+
+	bool _useSprite = false;
+
+	bool _drawText;
+
 };
 
 

@@ -5,3 +5,8 @@ imgs:
 // button_data
 3 buttons/button_up.png
 -
+fonts:
+// font_data
+1 fonts/Anonymous.ttf
+-
+end

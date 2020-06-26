@@ -20,10 +20,12 @@ public:
 
 	void loadTexture(int id, std::string path);
 
+	sf::Font * getFont(int id);
 	sf::Sprite getSprite(int id);
 
 private:
 	std::map<int, RImg*> _imgLists;
+	std::map<int, sf::Font> _fontLists;
 	std::string _path;
 };
 #endif

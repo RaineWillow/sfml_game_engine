@@ -5,10 +5,11 @@ LIBS=-lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network
 SOURCES=src/main.cpp
 CORE=src/core/window.cpp src/core/resource_manager.cpp
 SCENE=src/scene/game.cpp src/scene/main_menu.cpp
+GUI=src/gui/gui_manager.cpp
 UTILS=src/utils/controller.cpp
 
 all:
-	$(CXX) $(CFLAGS) -o game.exe $(SOURCES) $(CORE) $(SCENE) $(UTILS) $(LIBS)
+	$(CXX) $(CFLAGS) -o game.exe $(SOURCES) $(CORE) $(SCENE) $(GUI) $(UTILS) $(LIBS)
 
 .PHONY: run
 run:
