@@ -15,6 +15,7 @@ void Controller::keyDown(sf::Keyboard::Key qKey) {
 	} else {
 		_keyList[qKey].down = true;
 	}
+	_generic.down = true;
 }
 
 void Controller::keyUp(sf::Keyboard::Key qKey) {
@@ -26,6 +27,11 @@ void Controller::keyUp(sf::Keyboard::Key qKey) {
 		}
 		_keyList[qKey].down = false;
 	}
+
+	if (_generic.down) {
+		_generic.clicked = true;
+	}
+	_generic.down = false;
 }
 
 bool Controller::getKey(sf::Keyboard::Key qKey) {
@@ -47,6 +53,20 @@ bool Controller::getKeyClicked(sf::Keyboard::Key qKey) {
 		} else {
 			return false;
 		}
+	}
+	return false;
+}
+
+bool Controller::getGen() {
+	return _generic.down;
+}
+
+bool Controller::getGenClicked() {
+	if (_generic.clicked) {
+		_generic.clicked = false;
+		return true;
+	} else {
+		return false;
 	}
 	return false;
 }

@@ -21,7 +21,7 @@ public:
 		}
 	}
 
-	virtual void update(WidgetData * data)=0;
+	virtual bool update(WidgetData * data)=0;
 	virtual void render(sf::RenderTexture * renderOut)=0;
 
 	void registerEvent(std::string qKey, ClassType& object, FunctionType method) {

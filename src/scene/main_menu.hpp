@@ -8,6 +8,7 @@
 #include "../gui/widget_base.hpp"
 #include "../gui/widget.hpp"
 #include "../gui/g_button.hpp"
+#include "../gui/G_textbox.hpp"
 #include <vector>
 #include <iostream>
 #include "scene.hpp"

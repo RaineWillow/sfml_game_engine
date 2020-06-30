@@ -6,12 +6,12 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 	_data->active = -1;
 	_data->clicked = false;
 
-	_guiManager = new GuiManager(800, 600);
+	_guiManager = new GuiManager(800, 600, _data);
 
 	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 0, 100, 40);
 
-	startButton->registerEvent("onActive", *this, &MainMenu::onBActive);
-	startButton->registerEvent("onInactive", *this, &MainMenu::onBInactive);
+	startButton->registerEvent("onHover", *this, &MainMenu::onBActive);
+	startButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
 	startButton->registerEvent("onClick", *this, &MainMenu::onBClick);
 
 	startButton->useSprite(_resManager->getSprite(3));
@@ -21,8 +21,8 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 
 	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 100, 100, 40);
 
-	exitButton->registerEvent("onActive", *this, &MainMenu::onBActive);
-	exitButton->registerEvent("onInactive", *this, &MainMenu::onBInactive);
+	exitButton->registerEvent("onHover", *this, &MainMenu::onBActive);
+	exitButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
 	exitButton->registerEvent("onClick", *this, &MainMenu::onBClick);
 
 	exitButton->useSprite(_resManager->getSprite(3));
@@ -30,10 +30,23 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 
 	_guiManager->registerWidget(exitButton);
 
+
+	GButton<MainMenu, void> * testButton = new GButton<MainMenu, void>(_guiManager->getNext(), 400, 100, 100, 40);
+	testButton->useSprite(_resManager->getSprite(3));
+	testButton->addTitle("tester", _resManager->getFont(1), sf::Color::Red);
+
+	_guiManager->registerWidget(testButton);
+
+	GTextBox<MainMenu, void> * textBox = new GTextBox<MainMenu, void>(_guiManager->getNext(), 50, 200, 200, 30, _resManager->getFont(1));
+	textBox->addTitle("Enter text here...", sf::Color(150, 150, 150));
+
+	_guiManager->registerWidget(textBox);
+
 	_controller = new Controller;
 	_controller->keyAdd(sf::Keyboard::Up);
 	_controller->keyAdd(sf::Keyboard::Down);
 	_controller->keyAdd(sf::Keyboard::Z);
+	_controller->keyAdd(sf::Keyboard::BackSpace);
 
 	_controller->mbAdd(sf::Mouse::Left);
 
@@ -47,6 +60,7 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
+	char newChar = *"";
 	switch (event.type) {
 		case sf::Event::KeyPressed:
 			_controller->keyDown(event.key.code);
@@ -63,15 +77,25 @@ void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
 		case sf::Event::MouseMoved:
 			_controller->mouseMotion(event.mouseMove.x, event.mouseMove.y);
 			break;
+		case sf::Event::TextEntered:
+			if (event.text.unicode < 128) {
+				newChar = static_cast<char>(event.text.unicode);
+			}
+			break;
 	}
 
 	_data->mx = _controller->getMx();
 	_data->my = _controller->getMy();
 
+	_data->genClicked = _controller->getGenClicked();
+
+	_data->backSpace = _controller->getKeyClicked(sf::Keyboard::BackSpace);
+
 	_data->clicked = _controller->getKeyClicked(sf::Keyboard::Z) || _controller->getMbClicked(sf::Mouse::Left);
 	_data->mMoved = _controller->mMoved();
 
-	_guiManager->update(_data);
+	_guiManager->recText(newChar);
+	_guiManager->update();
 
 	if (_window.pollEvent(event)) {
 		this->update(_window, event);

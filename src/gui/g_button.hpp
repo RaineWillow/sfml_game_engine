@@ -14,7 +14,6 @@ public:
 	GButton(int id, int x, int y, double w, double h)
 	{
 		_id = id;
-		_lastId = -1;
 		_x = x;
 		_y = y;
 		_w = w;
@@ -29,49 +28,42 @@ public:
 		_useSprite = true;
 	}
 
-	void update(WidgetData * data)
+	bool update(WidgetData * data)
 	{
 		if (((((data->mx >= _x) && (data->mx <= _x+_w)) && ((data->my >= _y) && (data->my <= _y+_h))))) {
-			data->active = _id;
+			data->setHover(_id);
 
 			if (data->clicked) {
+				data->setActive(_id);
 				this->callEvent("onClick");
+				_active = true;
 			}
 
-			if ((!_wasActive) && (data->mMoved)) {
-				std::cout << "working!\n";
-				_wasActive = true;
-				this->callEvent("onActive");
+			if ((!_wasHover) && (data->mMoved)) {
+				_wasHover = true;
+				this->callEvent("onHover");
 			}
 
 		} else {
-			if ((_wasActive) && ((data->mMoved))) {
-				this->callEvent("onInactive");
-				_wasActive = false;
-			}
-		}
-/*
-		if ((data->active == _id)) {
-
-			if (data->clicked == true) {
-				this->callEvent("onClick");
+			if (data->clicked) {
+				_active = false;
 			}
 
-			if (_lastId != data->active) {
-				_wasActive = true;
-				this->callEvent("onActive");
-			}
-		} else {
-			if (_lastId != data->active) {
-				if (_wasActive) {
-					this->callEvent("onInactive");
-					_wasActive = false;
-				}
+			if ((_wasHover) && (data->mMoved)) {
+				this->callEvent("onLeft");
+				_wasHover = false;
 			}
 		}
 
-		_lastId = data->active;
-*/
+		if ((data->active == _id) && (!_wasActive)) {
+			_wasActive = true;
+			std::cout << "true " << _id << "\n";
+		} else if ((data->active != _id) && (_wasActive)) {
+			_wasActive = false;
+			std::cout << "false " << _id << "\n";
+		}
+
+		return _active;
 	}
 
 	void render(sf::RenderTexture * renderOut) {
@@ -104,9 +96,8 @@ public:
 
 private:
 	int _id;
-	int _lastId;
-	int _lastHover;
 	bool _wasActive = false;
+	bool _wasHover = false;
 
 	int _x;
 	int _y;
@@ -115,7 +106,9 @@ private:
 
 	bool _useSprite = false;
 
-	bool _drawText;
+	bool _drawText = false;
+
+	bool _active = false;
 
 };
 

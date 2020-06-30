@@ -19,6 +19,9 @@ public:
 	bool getKey(sf::Keyboard::Key qKey);
 	bool getKeyClicked(sf::Keyboard::Key qKey);
 
+	bool getGen();
+	bool getGenClicked();
+
 	//mouse functions----------------------------------------------------------
 
 	void mbAdd(sf::Mouse::Button mb);
@@ -35,6 +38,8 @@ public:
 private:
 	std::map<sf::Keyboard::Key,ButtonData> _keyList;
 	std::map<sf::Mouse::Button,ButtonData> _mbList;
+
+	ButtonData _generic;
 
 	int _mx;
 	int _my;
