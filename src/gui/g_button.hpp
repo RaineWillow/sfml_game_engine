@@ -18,6 +18,9 @@ public:
 		_y = y;
 		_w = w;
 		_h = h;
+		wBox.setPosition(sf::Vector2f(_x, _y));
+		wBox.setSize(sf::Vector2f(_w, _h));
+		wBox.setFillColor(sf::Color(200, 200, 200));
 	}
 
 	void useSprite(sf::Sprite setSprite) {
@@ -67,6 +70,10 @@ public:
 	}
 
 	void render(sf::RenderTexture * renderOut) {
+		if (_useShape) {
+			renderOut->draw(wBox);
+		}
+		
 		if (_useSprite) {
 			renderOut->draw(widgetSprite);
 		}
@@ -92,6 +99,7 @@ public:
 	}
 
 	sf::Sprite widgetSprite;
+	sf::RectangleShape wBox;
 	sf::Text title;
 
 private:
@@ -105,6 +113,8 @@ private:
 	double _h;
 
 	bool _useSprite = false;
+
+	bool _useShape = true;
 
 	bool _drawText = false;
 

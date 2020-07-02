@@ -25,7 +25,7 @@ struct WidgetData {
 	bool textMode = false;
 	bool textEntered = false;
 	bool backSpace = false;
-	bool genClicked = false;
+	bool genUp = false;
 	char lastText;
 };
 

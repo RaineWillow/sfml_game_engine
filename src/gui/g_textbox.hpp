@@ -86,7 +86,7 @@ public:
 
 		if ((data->active == _id) && (data->textMode == true)) {
 			if ((data->textEntered == true)) {
-				if (data->backSpace) {
+				if (data->lastText == 8) {
 					if (!_textInput.empty()) {
 						_textInput.pop_back();
 					}

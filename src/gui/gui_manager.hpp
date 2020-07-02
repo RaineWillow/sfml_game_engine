@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "widget_base.hpp"
 #include <iostream>
+#include <chrono>
 #include <vector>
 
 class GuiManager {
@@ -19,10 +20,14 @@ public:
 	void update();
 	sf::Sprite getRenderable();
 
+	std::chrono::milliseconds textDelay;
+
 private:
 	WidgetData * _data;
 	std::vector<WidgetBase*> _widgets;
 	sf::RenderTexture _guiTexture;
+	std::chrono::time_point<std::chrono::high_resolution_clock> _currTime;
+	char _lastChar;
 };
 
 

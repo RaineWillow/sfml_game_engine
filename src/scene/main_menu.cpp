@@ -87,9 +87,7 @@ void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
 	_data->mx = _controller->getMx();
 	_data->my = _controller->getMy();
 
-	_data->genClicked = _controller->getGenClicked();
-
-	_data->backSpace = _controller->getKeyClicked(sf::Keyboard::BackSpace);
+	_data->genUp = !_controller->getGen();
 
 	_data->clicked = _controller->getKeyClicked(sf::Keyboard::Z) || _controller->getMbClicked(sf::Mouse::Left);
 	_data->mMoved = _controller->mMoved();

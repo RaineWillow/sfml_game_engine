@@ -3,6 +3,10 @@
 GuiManager::GuiManager(int w, int h, WidgetData * data) {
 	_data = data;
 	_guiTexture.create(w, h);
+
+	_currTime = std::chrono::high_resolution_clock::now();
+	std::chrono::milliseconds defDur(200);
+	textDelay = defDur;
 }
 
 GuiManager::~GuiManager() {
@@ -20,14 +24,29 @@ int GuiManager::getNext() {
 }
 
 void GuiManager::recText(char myChar) {
-	if (myChar != *"") {
-		_data->lastText = myChar;
-	}
-
 	if (_data->textMode) {
-		if ((!_data->textEntered) && (_data->genClicked)) {
-			_data->textEntered = true;
+		if (myChar != *"") {
+			_data->lastText = myChar;
+		} else {
+			return;
 		}
+
+		auto newTime = std::chrono::high_resolution_clock::now();
+
+		if ((!_data->textEntered)) {
+			if (_lastChar != _data->lastText || _data->genUp) {
+				_currTime = newTime;
+				_data->textEntered = true;
+			} else {
+				auto elapsedTime(newTime-_currTime);
+				if (std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(elapsedTime).count() > std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(textDelay).count())
+				{
+					_currTime = newTime;
+					_data->textEntered = true;
+				}
+			}
+		}
+		_lastChar = _data->lastText;
 	}
 }
 
