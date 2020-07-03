@@ -8,7 +8,12 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 
 	_guiManager = new GuiManager(800, 600, _data);
 
-	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 0, 100, 40);
+	GMenu<MainMenu, void> * myMenu = new GMenu<MainMenu, void>(_guiManager->getNext(), 0, 0, 200, 600, 30);
+	myMenu->setScrollable();
+
+	_guiManager->registerWidget(myMenu);
+
+	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(myMenu->getNext(), 0, myMenu->getCenteredY(40), 100, 40);
 
 	startButton->registerEvent("onHover", *this, &MainMenu::onBActive);
 	startButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
@@ -17,9 +22,9 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 	startButton->useSprite(_resManager->getSprite(3));
 	startButton->addTitle("Start", _resManager->getFont(1), sf::Color::Red);
 
-	_guiManager->registerWidget(startButton);
+	myMenu->registerWidget(startButton);
 
-	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(_guiManager->getNext(), 0, 100, 100, 40);
+	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(myMenu->getNext(), 0, myMenu->getCenteredY(40), 100, 40);
 
 	exitButton->registerEvent("onHover", *this, &MainMenu::onBActive);
 	exitButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
@@ -28,26 +33,13 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 	exitButton->useSprite(_resManager->getSprite(3));
 	exitButton->addTitle("Exit", _resManager->getFont(1), sf::Color::Red);
 
-	_guiManager->registerWidget(exitButton);
+	myMenu->registerWidget(exitButton);
 
-
-	GButton<MainMenu, void> * testButton = new GButton<MainMenu, void>(_guiManager->getNext(), 400, 100, 100, 40);
-	testButton->useSprite(_resManager->getSprite(3));
-	testButton->addTitle("tester", _resManager->getFont(1), sf::Color::Red);
-
-	_guiManager->registerWidget(testButton);
-
-	GTextBox<MainMenu, void> * textBox = new GTextBox<MainMenu, void>(_guiManager->getNext(), 50, 200, 200, 30, _resManager->getFont(1));
-	textBox->addTitle("Enter text here...", sf::Color(150, 150, 150));
-
-	_guiManager->registerWidget(textBox);
+	GButton<MainMenu, void> * testButton = new GButton<MainMenu, void>(myMenu->getNext(), 0, myMenu->getCenteredY(40), 100, 40);
+	testButton->addTitle("Tester", _resManager->getFont(1), sf::Color::Red);
+	myMenu->registerWidget(testButton);
 
 	_controller = new Controller;
-	_controller->keyAdd(sf::Keyboard::Up);
-	_controller->keyAdd(sf::Keyboard::Down);
-	_controller->keyAdd(sf::Keyboard::Z);
-	_controller->keyAdd(sf::Keyboard::BackSpace);
-
 	_controller->mbAdd(sf::Mouse::Left);
 
 
@@ -89,7 +81,7 @@ void MainMenu::update(sf::RenderWindow & _window, sf::Event & event) {
 
 	_data->genUp = !_controller->getGen();
 
-	_data->clicked = _controller->getKeyClicked(sf::Keyboard::Z) || _controller->getMbClicked(sf::Mouse::Left);
+	_data->clicked = _controller->getMbClicked(sf::Mouse::Left);
 	_data->mMoved = _controller->mMoved();
 
 	_guiManager->recText(newChar);
@@ -121,6 +113,7 @@ void MainMenu::onBClick(Widget<MainMenu, void> * instance) {
 	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 200));
 	int id = castContext->getId();
 	if (id == 0) {
+		std::cout << id;
 		this->_isActive = false;
 		this->_myDat.id = 2;
 	} else if (id == 1) {

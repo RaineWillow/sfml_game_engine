@@ -31,8 +31,14 @@ struct WidgetData {
 
 class WidgetBase {
 public:
-	virtual bool update(WidgetData * data)=0;
+	virtual bool update(WidgetData * data, sf::RenderTexture * texture)=0;
 	virtual void render(sf::RenderTexture * renderOut)=0;
+
+	int scrollOffsetX = 0;
+	int scrollOffsetY = 0;
+
+	int _x;
+	int _y;
 };
 
 #endif

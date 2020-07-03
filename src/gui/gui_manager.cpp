@@ -53,7 +53,7 @@ void GuiManager::recText(char myChar) {
 void GuiManager::update() {
 	bool anyActive;
 	for (int i = 0; i < (int)_widgets.size(); i++) {
-		anyActive = _widgets[i]->update(_data);
+		anyActive = _widgets[i]->update(_data, &_guiTexture);
 	}
 	if (_data->textEntered) {
 		_data->textEntered = false;

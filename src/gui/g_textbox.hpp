@@ -13,12 +13,12 @@ class GTextBox : public Widget<ClassType, Result> {
 public:
 	GTextBox(int id, int x, int y, double w, double h, sf::Font * font) {
 		_id = id;
-		_x = x;
-		_y = y;
+		this->_x = x;
+		this->_y = y;
 		_w = w;
 		_h = h;
 
-		wBox.setPosition(sf::Vector2f(_x, _y));
+		wBox.setPosition(sf::Vector2f(this->_x, this->_y));
 		wBox.setSize(sf::Vector2f(_w, _h));
 		wBox.setFillColor(sf::Color(200, 200, 200));
 		wBox.setOutlineThickness(5.0);
@@ -28,9 +28,9 @@ public:
 		text.setString(_textInput);
 		text.setCharacterSize(_h/2);
 		text.setFillColor(sf::Color::Black);
-		text.setPosition(_x+1, _y);
+		text.setPosition(this->_x+1, this->_y);
 
-		cursor.setPosition(sf::Vector2f(_x+1, _y+1));
+		cursor.setPosition(sf::Vector2f(this->_x+1, this->_y+1));
 		cursor.setSize(sf::Vector2f(_w/30, _h));
 		cursor.setFillColor(sf::Color(0, 0, 0));
 
@@ -38,13 +38,17 @@ public:
 		std::chrono::milliseconds defDur(700);
 		blinkDur = defDur;
 
-		_textView.reset(sf::FloatRect(_x, _y, _w, _h));
+		_textView.reset(sf::FloatRect(this->_x, this->_y, _w, _h));
 		_font = font;
 	}
 
-	bool update(WidgetData * data)
+	bool update(WidgetData * data, sf::RenderTexture * texture)
 	{
-		if (((((data->mx >= _x) && (data->mx <= _x+_w)) && ((data->my >= _y) && (data->my <= _y+_h))))) {
+		sf::Vector2i loc(this->_x - this->scrollOffsetX, this->_y - this->scrollOffsetY);
+
+		sf::Vector2f wLoc = texture->mapPixelToCoords(loc);
+
+		if (((((data->mx >= wLoc.x) && (data->mx <= wLoc.x+_w)) && ((data->my >= wLoc.y) && (data->my <= wLoc.y+_h))))) {
 			data->setHover(_id);
 
 			if (data->clicked) {
@@ -96,15 +100,15 @@ public:
 				text.setString(_textInput);
 				text.setFont(*_font);
 				text.setCharacterSize(_h/2);
-				text.setPosition(_x+1, (_y+_h/2) - (text.getLocalBounds().height/2));
+				text.setPosition(this->_x+1, (this->_y+_h/2) - (text.getLocalBounds().height/2));
 				if (text.getLocalBounds().width > _w) {
-					text.setPosition(_x+1 - (text.getLocalBounds().width - _w), (_y+_h/2) - (text.getLocalBounds().height/2));
-					cursor.setPosition((_x+ (text.getLocalBounds().width-_w)), _y+1);
+					text.setPosition(this->_x+1 - (text.getLocalBounds().width - _w), (this->_y+_h/2) - (text.getLocalBounds().height/2));
+					cursor.setPosition((this->_x+ (text.getLocalBounds().width-_w)), this->_y+1);
 				} else {
-					text.setPosition(_x+1, (_y+_h/2) - (text.getLocalBounds().height/2));
-					cursor.setPosition((_x+text.getLocalBounds().width), _y+1);
+					text.setPosition(this->_x+1, (this->_y+_h/2) - (text.getLocalBounds().height/2));
+					cursor.setPosition((this->_x+text.getLocalBounds().width), this->_y+1);
 				}
-				cursor.setPosition((_x+text.getLocalBounds().width), _y+1);
+				cursor.setPosition((this->_x+text.getLocalBounds().width), this->_y+1);
 				_drawnCursor = true;
 			}
 		}
@@ -114,7 +118,7 @@ public:
 	void render(sf::RenderTexture * renderOut) {
 		sf::Sprite texSprite;
 		texSprite.setTexture(renderOut->getTexture());
-		_textView.setViewport(sf::FloatRect((double)_x / (double)texSprite.getTextureRect().width, (double)_y / (double)texSprite.getTextureRect().height, _w / texSprite.getTextureRect().width, _h / texSprite.getTextureRect().height));
+		_textView.setViewport(sf::FloatRect((double)this->_x / (double)texSprite.getTextureRect().width, (double)this->_y / (double)texSprite.getTextureRect().height, _w / texSprite.getTextureRect().width, _h / texSprite.getTextureRect().height));
 		if (_useShape) {
 			renderOut->draw(wBox);
 		}
@@ -149,7 +153,7 @@ public:
 		title.setString(myTitle);
 		title.setCharacterSize(_h/2);
 		title.setFillColor(color);
-		title.setPosition(_x+1, (_y+_h/2) - (title.getLocalBounds().height/2));
+		title.setPosition(this->_x+1, (this->_y+_h/2) - (title.getLocalBounds().height/2));
 	}
 
 	sf::Text title;
@@ -163,8 +167,6 @@ private:
 	bool _wasActive = false;
 	bool _wasHover = false;
 
-	int _x;
-	int _y;
 	double _w;
 	double _h;
 
