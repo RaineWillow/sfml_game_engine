@@ -8,7 +8,7 @@ class Game : public Scene {
 public:
 	Game(); //
 	~Game();
-	void update(sf::RenderWindow & _window, sf::Event & event);
+	void update(sf::RenderWindow & _window, sf::Event & event, bool happened);
 	void render(sf::RenderWindow * _window);
 private:
 	//sf::RenderWindow * _window;

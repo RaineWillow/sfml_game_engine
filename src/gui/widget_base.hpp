@@ -27,6 +27,8 @@ struct WidgetData {
 	bool backSpace = false;
 	bool genUp = false;
 	char lastText;
+
+	int mDelta = 0;
 };
 
 class WidgetBase {
@@ -37,8 +39,13 @@ public:
 	int scrollOffsetX = 0;
 	int scrollOffsetY = 0;
 
+	int menuOffsetX = 0;
+	int menuOffsetY = 0;
+
 	int _x;
 	int _y;
+
+	sf::View * useView = nullptr;
 };
 
 #endif

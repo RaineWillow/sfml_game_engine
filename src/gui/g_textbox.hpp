@@ -31,7 +31,7 @@ public:
 		text.setPosition(this->_x+1, this->_y);
 
 		cursor.setPosition(sf::Vector2f(this->_x+1, this->_y+1));
-		cursor.setSize(sf::Vector2f(_w/30, _h));
+		cursor.setSize(sf::Vector2f(5, _h));
 		cursor.setFillColor(sf::Color(0, 0, 0));
 
 		_currTime = std::chrono::high_resolution_clock::now();
@@ -44,7 +44,7 @@ public:
 
 	bool update(WidgetData * data, sf::RenderTexture * texture)
 	{
-		sf::Vector2i loc(this->_x - this->scrollOffsetX, this->_y - this->scrollOffsetY);
+		sf::Vector2i loc(this->_x - this->scrollOffsetX + this->menuOffsetX, this->_y - this->scrollOffsetY + this->menuOffsetY);
 
 		sf::Vector2f wLoc = texture->mapPixelToCoords(loc);
 

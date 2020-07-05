@@ -132,6 +132,20 @@ void Controller::mouseMotion(int mx, int my){
 	_my = my;
 }
 
+void Controller::mouseScrolled(int delta) {
+	_mouseDelta = delta;
+}
+
+int Controller::mouseDelta()
+{
+	if (_mouseDelta != 0) {
+		int retVal = _mouseDelta;
+		_mouseDelta = 0;
+		return retVal;
+	}
+	return 0;
+}
+
 bool Controller::mMoved() {
 	if (_mMoved) {
 		_mMoved = false;

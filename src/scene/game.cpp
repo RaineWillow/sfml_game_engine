@@ -8,7 +8,7 @@ Game::~Game() {
 	//pass
 }
 
-void Game::update(sf::RenderWindow & _window, sf::Event & event) {
+void Game::update(sf::RenderWindow & _window, sf::Event & event, bool happened) {
 	switch (event.type) {
 		case sf::Event::KeyPressed:
 			if (event.key.code == sf::Keyboard::Q) {

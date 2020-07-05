@@ -42,6 +42,7 @@ public:
 		}
 	}
 
+
 private:
 	std::map<std::string,Functor<ClassType, Result, Widget>*> _eventList;
 };

@@ -20,7 +20,9 @@ public:
 		_h = h;
 		wBox.setPosition(sf::Vector2f(this->_x, this->_y));
 		wBox.setSize(sf::Vector2f(_w, _h));
-		wBox.setFillColor(sf::Color(200, 200, 200, 250));
+		wBox.setFillColor(sf::Color(40, 75, 145, 250));
+		wBox.setOutlineThickness((_w*_h)/900);
+		wBox.setOutlineColor(sf::Color(75, 130, 170));
 	}
 
 	void useSprite(sf::Sprite setSprite) {
@@ -33,9 +35,7 @@ public:
 
 	bool update(WidgetData * data, sf::RenderTexture * texture)
 	{
-		sf::Vector2i loc(this->_x - this->scrollOffsetX, this->_y - this->scrollOffsetY);
-
-		std::cout << "test " << this->scrollOffsetY << "\n";
+		sf::Vector2i loc(this->_x - this->scrollOffsetX + this->menuOffsetX, this->_y - this->scrollOffsetY + this->menuOffsetY);
 
 		sf::Vector2f wLoc = texture->mapPixelToCoords(loc);
 

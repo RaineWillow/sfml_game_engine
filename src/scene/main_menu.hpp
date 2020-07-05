@@ -12,13 +12,15 @@
 #include "../gui/g_menu.hpp"
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include "scene.hpp"
 
 class MainMenu : public Scene {
 public:
 	MainMenu(ResourceManager * resMan);
 	~MainMenu();
-	void update(sf::RenderWindow & _window, sf::Event & event);
+	void update(sf::RenderWindow & _window, sf::Event & event, bool happened);
 	void render(sf::RenderWindow * _window);
 
 	void onBActive(Widget<MainMenu, void> * instance);

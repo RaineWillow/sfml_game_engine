@@ -23,7 +23,15 @@ public:
 
 		wBox.setPosition(sf::Vector2f(this->_x, this->_y));
 		wBox.setSize(sf::Vector2f(_w, _h));
-		wBox.setFillColor(sf::Color(100, 100, 100, 250));
+		wBox.setFillColor(sf::Color(10, 20, 30, 250));
+
+		scrollBarBack.setPosition(sf::Vector2f((this->_x + _w) - (_w/20), this->_y));
+		scrollBarBack.setSize(sf::Vector2f(_w/20, _h));
+		scrollBarBack.setFillColor(sf::Color(30, 30, 30));
+
+		scrollBar.setPosition(sf::Vector2f((this->_x + _w) - (_w/20), this->_y));
+		scrollBar.setSize(sf::Vector2f(_w/20, _h));
+		scrollBar.setFillColor(sf::Color(100, 110, 190));
 
 		_widgetView.reset(sf::FloatRect(this->_x, this->_y, _w, _h));
 
@@ -55,7 +63,6 @@ public:
 
 	void setScrollable() {
 		_scrollable = true;
-		_scrollerOffset = 50;
 	}
 
 	bool update(WidgetData * data, sf::RenderTexture * texture)
@@ -63,6 +70,17 @@ public:
 		sf::Vector2i loc(this->_x - this->scrollOffsetX, this->_y - this->scrollOffsetY);
 
 		sf::Vector2f wLoc = texture->mapPixelToCoords(loc);
+
+		double scrollHeight = _lastHeight - _h;
+		if (_scrollable) {
+			double calc = (double)_h/(double)_lastHeight;
+			scrollBar.setSize(sf::Vector2f(_w/20, _h * calc));
+			scrollBar.setPosition(sf::Vector2f((this->_x + _w) - (_w/20), this->_y + (_scrollerOffset * calc)));
+		}
+
+		if (scrollHeight < 0) {
+			_scrollable = false;
+		}
 
 		if (((((data->mx >= wLoc.x) && (data->mx <= wLoc.x+_w)) && ((data->my >= wLoc.y) && (data->my <= wLoc.y+_h))))) {
 			data->setHover(_id);
@@ -72,6 +90,17 @@ public:
 				this->callEvent("onClick");
 				_active = true;
 			}
+
+			if (data->mDelta != 0 && _scrollable) {
+				_scrollerOffset += (data->mDelta*-1) * (scrollHeight/8.0);
+				if (_scrollerOffset < 0) {
+					_scrollerOffset = 0;
+				}
+				if (_scrollerOffset > scrollHeight) {
+					_scrollerOffset = scrollHeight;
+				}
+			}
+			
 
 			if ((!_wasHover) && (data->mMoved)) {
 				_wasHover = true;
@@ -120,11 +149,18 @@ public:
 			renderOut->draw(title);
 		}
 
+		if (_scrollable) {
+			renderOut->draw(scrollBarBack);
+			renderOut->draw(scrollBar);
+		}
+
 		_widgetView.setCenter(_w/2, (_h/2) + _scrollerOffset);
 		renderOut->setView(_widgetView);
 
 		for (int i = 0; i < (int)_widgets.size(); i++) {
 			_widgets[i]->scrollOffsetY = _scrollerOffset;
+			_widgets[i]->menuOffsetX = this->_x;
+			_widgets[i]->menuOffsetY = this->_y;
 			_widgets[i]->render(renderOut);
 		}
 	}
@@ -135,7 +171,12 @@ public:
 		return returnVal;
 	}
 
+	int getCenteredX(double width) {
+		return this->_x;
+	}
+
 	void registerWidget(WidgetBase * widget) {
+		widget->useView = &_widgetView;
 		_widgets.push_back(widget);
 	}
 

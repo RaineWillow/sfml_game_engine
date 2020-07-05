@@ -31,8 +31,10 @@ public:
 	bool getMbClicked(sf::Mouse::Button mb);
 
 	void mouseMotion(int mx, int my);
+	void mouseScrolled(int delta);
 	bool mMoved();
 
+	int mouseDelta();
 	int getMx();
 	int getMy();
 private:
@@ -43,6 +45,7 @@ private:
 
 	int _mx;
 	int _my;
+	int _mouseDelta;
 	bool _mMoved = false;
 
 };
