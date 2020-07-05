@@ -82,13 +82,20 @@ public:
 			_scrollable = false;
 		}
 
+		for (int i = 0; i < (int)_widgets.size(); i++) {
+			_active = _widgets[i]->update(data, texture);
+		}
+
 		if (((((data->mx >= wLoc.x) && (data->mx <= wLoc.x+_w)) && ((data->my >= wLoc.y) && (data->my <= wLoc.y+_h))))) {
 			data->setHover(_id);
 
 			if (data->clicked) {
-				data->setActive(_id);
-				this->callEvent("onClick");
-				_active = true;
+				if (!_active) {
+					data->setActive(_id);
+					this->callEvent("onClick");
+					_active = true;
+				}
+
 			}
 
 			if (data->mDelta != 0 && _scrollable) {
@@ -100,7 +107,7 @@ public:
 					_scrollerOffset = scrollHeight;
 				}
 			}
-			
+
 
 			if ((!_wasHover) && (data->mMoved)) {
 				_wasHover = true;
@@ -122,10 +129,6 @@ public:
 			_wasActive = true;
 		} else if ((data->active != _id) && (_wasActive)) {
 			_wasActive = false;
-		}
-
-		for (int i = 0; i < (int)_widgets.size(); i++) {
-			_active = _widgets[i]->update(data, texture);
 		}
 
 		return _active;

@@ -16,7 +16,7 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 	_guiManager->registerWidget(myMenu);
 	_guiManager->registerWidget(testMenu);
 
-	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(myMenu->getNext(), 0, myMenu->getCenteredY(40), 100, 40);
+	GButton<MainMenu, void> * startButton = new GButton<MainMenu, void>(15, 0, myMenu->getCenteredY(40), 100, 40);
 
 	startButton->registerEvent("onHover", *this, &MainMenu::onBActive);
 	startButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
@@ -26,7 +26,7 @@ MainMenu::MainMenu(ResourceManager * resMan) {
 
 	myMenu->registerWidget(startButton);
 
-	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(myMenu->getNext(), 0, myMenu->getCenteredY(40), 100, 40);
+	GButton<MainMenu, void> * exitButton = new GButton<MainMenu, void>(16, 0, myMenu->getCenteredY(40), 100, 40);
 
 	exitButton->registerEvent("onHover", *this, &MainMenu::onBActive);
 	exitButton->registerEvent("onLeft", *this, &MainMenu::onBInactive);
@@ -145,11 +145,11 @@ void MainMenu::onBClick(Widget<MainMenu, void> * instance) {
 	GButton<MainMenu, void> * castContext = dynamic_cast<GButton<MainMenu, void>*>(instance);
 	castContext->widgetSprite.setColor(sf::Color(255, 255, 255, 200));
 	int id = castContext->getId();
-	if (id == 0) {
+	if (id == 15) {
 		std::cout << id;
 		this->_isActive = false;
 		this->_myDat.id = 2;
-	} else if (id == 1) {
+	} else if (id == 16) {
 		this->_isActive = false;
 		this->_myDat.id = -1;
 	}
